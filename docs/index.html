@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Awesome Archive - 每日开源项目精选</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    min-height: 100vh;
+  }
+  .hero {
+    text-align: center;
+    padding: 80px 20px 40px;
+    background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  }
+  .hero h1 {
+    font-size: 3em;
+    font-weight: 700;
+    background: linear-gradient(135deg, #22d3ee, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 16px;
+  }
+  .hero p {
+    font-size: 1.2em;
+    color: #94a3b8;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .badges {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .badges img { height: 24px; border-radius: 4px; }
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 40px 0;
+  }
+  .feature-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 24px;
+    transition: border-color 0.2s;
+  }
+  .feature-card:hover { border-color: #22d3ee; }
+  .feature-card .icon { font-size: 2em; margin-bottom: 12px; }
+  .feature-card h3 { font-size: 1.1em; margin-bottom: 8px; color: #f1f5f9; }
+  .feature-card p { font-size: 0.9em; color: #94a3b8; line-height: 1.5; }
+
+  .section-title {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin: 40px 0 20px;
+    color: #f1f5f9;
+  }
+  .archive-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .archive-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    transition: border-color 0.2s;
+  }
+  .archive-item:hover { border-color: #22d3ee; }
+  .archive-item .date { font-weight: 600; color: #22d3ee; }
+  .archive-item .count { color: #94a3b8; font-size: 0.9em; }
+  .archive-item a {
+    color: #22d3ee;
+    text-decoration: none;
+    font-size: 0.9em;
+    padding: 4px 12px;
+    border: 1px solid #22d3ee;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .archive-item a:hover {
+    background: #22d3ee;
+    color: #0f172a;
+  }
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin: 30px 0;
+  }
+  .stat-box {
+    text-align: center;
+    padding: 24px;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+  }
+  .stat-box .num {
+    font-size: 2em;
+    font-weight: 700;
+    color: #22d3ee;
+  }
+  .stat-box .label {
+    font-size: 0.8em;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+  .footer {
+    text-align: center;
+    padding: 40px;
+    color: #475569;
+    font-size: 0.9em;
+  }
+  .footer a { color: #22d3ee; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>📅 Daily Awesome Archive</h1>
+  <p>每日自动搜索 GitHub 优质开源项目，精选后按日期归档</p>
+  <div class="badges">
+    <img src="https://img.shields.io/github/stars/xiekun711/daily-awesome-archive?style=flat-square&logo=github&label=Stars&color=22d3ee" alt="Stars">
+    <img src="https://img.shields.io/badge/📅-每日更新-blue?style=flat-square" alt="每日更新">
+    <img src="https://img.shields.io/github/license/xiekun711/daily-awesome-archive?style=flat-square&label=License&color=a78bfa" alt="License">
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="num" id="total-days">2</div>
+      <div class="label">归档天数</div>
+    </div>
+    <div class="stat-box">
+      <div class="num" id="total-projects">60</div>
+      <div class="label">收录项目</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">5</div>
+      <div class="label">搜索领域</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">🕐 08:10</div>
+      <div class="label">自动更新</div>
+    </div>
+  </div>
+
+  <h2 class="section-title">🔍 搜索领域</h2>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="icon">🤖</div>
+      <h3>AI Agent / LLM 框架</h3>
+      <p>AI 智能体、大模型框架、自动化助手</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🧠</div>
+      <h3>AI 记忆 / 学习进化</h3>
+      <p>AI 记忆系统、知识图谱、RAG</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🔧</div>
+      <h3>开发工具 / 效率</h3>
+      <p>CLI 工具、开发效率、DevOps</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">⚡</div>
+      <h3>量化金融</h3>
+      <p>A 股、量化交易、算法交易</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🔥</div>
+      <h3>新颖有趣</h3>
+      <p>创意项目、新颖工具、有趣的开源项目</p>
+    </div>
+  </div>
+
+  <h2 class="section-title">🗓️ 归档日历</h2>
+  <div class="archive-list">
+    <div class="archive-item">
+      <div>
+        <span class="date">2026-05-07</span>
+        <span class="count"> | 30 个项目</span>
+      </div>
+      <a href="https://github.com/xiekun711/daily-awesome-archive/blob/main/data/20260507.md">查看详情 →</a>
+    </div>
+    <div class="archive-item">
+      <div>
+        <span class="date">2026-05-06</span>
+        <span class="count"> | 30 个项目</span>
+      </div>
+      <a href="https://github.com/xiekun711/daily-awesome-archive/blob/main/data/20260506.md">查看详情 →</a>
+    </div>
+  </div>
+
+  <h2 class="section-title">🚀 自动流程</h2>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="icon">⏰</div>
+      <h3>08:00 搜索推送</h3>
+      <p>GitHub API 搜索 5 个领域，推送报告到飞书</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">📦</div>
+      <h3>08:10 归档同步</h3>
+      <p>自动解析报告 → 归档 → git push 到仓库</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🤝</div>
+      <h3>开放贡献</h3>
+      <p>欢迎提 PR 优化算法、增加分类、改进功能</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>由 <a href="https://github.com/xiekun711">坤哥</a> 维护 · 由 Hermes Agent 自动驱动</p>
+  <p style="margin-top: 8px;"><a href="https://github.com/xiekun711/daily-awesome-archive">GitHub 仓库</a></p>
+</div>
+
+</body>
+</html>
