@@ -43,7 +43,7 @@ SEARCH_DOMAINS = [
     },
     {
         "name": "🔥 新颖有趣 / 创意项目",
-        "terms": ["new project", "fresh", "just published", "recently created"],
+        "terms": ["open-source", "toolkit", "awesome", "cli", "agent"],
         "min_stars": 50,
         "days": 14,
     },
@@ -434,7 +434,7 @@ def search_all_domains():
         print(f"  🔍 搜索: {name}")
         print(f"     查询: {search_query}")
 
-        result = github_search(search_query, per_page=10)
+        result = github_search(search_query, per_page=30)
 
         if "error" in result:
             print(f"     ⚠️  {result['error']}")
@@ -610,6 +610,7 @@ def generate_report(all_repos):
     for lv, cnt in sorted(levels.items()):
         lines.append(f"- {lv}: {cnt} 个")
     lines.append(f"- 数据来源: GitHub API (未认证)")
+    lines.append(f"- ✅ 本次推送 {len(all_repos)} 个项目，全部含 GitHub 仓库地址")
     lines.append("")
 
     # ============ 宣传 ============
