@@ -43,7 +43,12 @@ SEARCH_DOMAINS = [
     },
     {
         "name": "🔥 新颖有趣 / 创意项目",
-        "terms": ["open-source", "toolkit", "awesome", "cli", "agent"],
+        "terms": ["python-toolkit", "rust-cli", "go-microservice", "typescript-library", "open-source"],
+        "min_stars": 50,
+        "days": 14,
+    }, {
+        "name": "📱 开源移动端 / 跨平台",
+        "terms": ["react-native", "flutter-app", "mobile-app", "ios-android", "cross-platform"],
         "min_stars": 50,
         "days": 14,
     },
