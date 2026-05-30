@@ -557,6 +557,27 @@ def format_repo(repo_data):
         f"{reason_str}\n"
     )
 
+def load_yesterday_stars():
+    """加载昨天的 star 快照，返回 {full_name: star_count}"""
+    yesterday = (datetime.datetime.now() - datetime.timedelta(days=1)).strftime("%Y%m%d")
+    snapshot_file = Path(f"/home/ubuntu/daily-awesome-archive/data/.star_snapshots/{yesterday}.json")
+    if snapshot_file.exists():
+        try:
+            return json.loads(snapshot_file.read_text())
+        except:
+            pass
+    return {}
+
+
+def save_today_stars(all_repos):
+    """保存今天的 star 快照，用于明天计算涨幅"""
+    today = datetime.datetime.now().strftime("%Y%m%d")
+    snapshot_dir = Path("/home/ubuntu/daily-awesome-archive/data/.star_snapshots")
+    snapshot_dir.mkdir(parents=True, exist_ok=True)
+    snapshot = {fn: item["repo"].get("stargazers_count", 0) for fn, item in all_repos.items()}
+    (snapshot_dir / f"{today}.json").write_text(json.dumps(snapshot, ensure_ascii=False))
+
+
 def generate_report(all_repos):
     """生成推送报告"""
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -572,7 +593,47 @@ def generate_report(all_repos):
     lines.append("")
     lines.append("*多维搜索 + 智能分析，自动判断推荐优先级*\n")
 
-    # ============ 第一部分：强烈推荐 ============
+    # ============ 第一部分：涨星最快（独立专区）============
+    trending_items = [x for x in top_items if "📈 涨星最快" in x.get("domains", [])]
+    if trending_items:
+        # 按 star 数排序（涨星最快的 GitHub Trending 项目）
+        trending_items.sort(key=lambda x: x["repo"].get("stargazers_count", 0), reverse=True)
+        yesterday_stars = load_yesterday_stars()
+        
+        lines.append("## 📈 涨星最快（GitHub Trending 今日赢家）")
+        lines.append("_GitHub Trending 24小时涨星排名_\n")
+        for i, item in enumerate(trending_items[:10], 1):
+            repo = item["repo"]
+            fn = repo["full_name"]
+            stars = repo.get("stargazers_count", 0)
+            yesterday = yesterday_stars.get(fn, stars)  # 没有昨天数据就显示今日总数
+            delta = stars - yesterday if yesterday else 0
+            delta_str = f"+{delta}" if delta > 0 else str(delta) if delta < 0 else "—"
+            if delta > 0:
+                delta_str = f"+📈{delta}"
+            elif delta == 0 and yesterday:
+                delta_str = "—"
+            
+            level = item["level"]
+            url = repo.get("html_url", "")
+            desc = repo.get("description") or "暂无描述"
+            lang = repo.get("language") or ""
+            forks = repo.get("forks_count", 0)
+            
+            meta = f"⭐{stars}"
+            if lang:
+                meta += f" · 🔵{lang}"
+            if forks > 0:
+                meta += f" · ⑂{forks}"
+            if delta > 0:
+                meta += f" · {delta_str}"
+            
+            lines.append(f"{i}. **[{fn}]({url})** {level}")
+            lines.append(f"   _{desc}_")
+            lines.append(f"   {meta}\n")
+        lines.append("")
+
+    # ============ 第二部分：强烈推荐 ============
     hot = [x for x in top_items if x["level"] == "🔥 强烈推荐"]
     if hot:
         lines.append("## 🔥 强烈推荐")
@@ -581,7 +642,7 @@ def generate_report(all_repos):
             lines.append(format_repo(item))
         lines.append("")
 
-    # ============ 第二部分：按领域分组 ============
+    # ============ 第三部分：按领域分组 ============
     worthwhile = [x for x in top_items if x["level"] != "🔥 强烈推荐"]
     if worthwhile:
         # 按 domain 分组
@@ -604,7 +665,7 @@ def generate_report(all_repos):
                 lines.append(format_repo(item))
             lines.append("")
 
-    # ============ 第三部分：统计信息 ============
+    # ============ 第四部分：统计信息 ============
     lines.append("---")
     lines.append("📊 **统计**")
     lines.append(f"- 共扫描 {len(SEARCH_DOMAINS)} 个领域，发现 {len(all_repos)} 个项目")
@@ -668,6 +729,13 @@ def main():
     # 生成报告
     print("\n📝 生成报告...")
     report = generate_report(all_repos)
+
+    # 保存今日 star 快照（用于明天计算涨幅）
+    try:
+        save_today_stars(all_repos)
+        print("✅ 今日 star 快照已保存")
+    except Exception as e:
+        print(f"⚠️ star 快照保存失败: {e}")
 
     # 保存到文件（带日期后缀，确保 hourly_learn 能找到）
     today_str = datetime.datetime.now().strftime("%Y%m%d")
